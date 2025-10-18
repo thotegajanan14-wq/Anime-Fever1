@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Hub - NEON EDITION</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Define Neon Color Variables */
+        :root {
+            /* DARK MODE (Default) */
+            --color-black: #111111;
+            --color-dark-gray: #222222;
+            --color-neon-red: #ff3366; /* Bright, striking red */
+            --color-neon-glow: rgba(255, 51, 102, 0.6); /* For the glow effect */
+            --color-text-light: #f0f0f0;
+            --color-text-dark: #111111; /* Used for light mode text */
+            
+            --color-main-bg: var(--color-black); /* Body background */
+            --color-surface-bg: var(--color-dark-gray); /* Navbar, Content section background */
+            --color-card-bg: var(--color-black); /* Anime Card, Quiz Box background */
+            --color-border: var(--color-neon-red);
+            --color-shadow: 0 0 15px var(--color-neon-glow);
+            --color-text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+            
+            --color-correct: #33cc33; 
+            --color-incorrect: #ff0000; 
+            --color-poll-1: #00ffff; 
+            --color-poll-2: #ff00ff; 
+            --color-poll-3: #ffff00; 
+            --color-editz-accent: #00ffaa;
+        }
+
+        /* LIGHT MODE OVERRIDES */
+        body.light-mode {
+            --color-main-bg: #f0f0f0;
+            --color-surface-bg: #ffffff;
+            --color-card-bg: #f8f8f8;
+            --color-neon-red: #d00040; /* Slightly deeper neon red for contrast */
+            --color-neon-glow: rgba(208, 0, 64, 0.4); 
+            --color-text-light: var(--color-text-dark); /* Text becomes dark */
+            --color-text-shadow: none;
+            --color-border: #bbbbbb; /* Lighter border for light mode */
+            --color-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); 
+        }
+        
+        /* Basic Reset and Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-main-bg); 
+            color: var(--color-text-light);
+            font-size: 18px; 
+            transition: background-color 0.5s;
+        }
+
+        /* Header and Navigation Bar */
+        .navbar {
+            background-color: var(--color-surface-bg); 
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center; 
+            border-bottom: 2px solid var(--color-neon-red);
+            box-shadow: var(--color-shadow); 
+        }
+
+        /* LOGO STYLE */
+        .site-logo {
+            height: 50px; 
+            margin-right: 10px; 
+            filter: drop-shadow(0 0 8px var(--color-neon-red)); 
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .site-logo:hover {
+            transform: scale(1.1) rotate(-5deg); 
+        }
+        
+        .light-mode .site-logo {
+            filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0.1)); 
+        }
+
+        .navbar h1 {
+            margin: 0; 
+            font-size: 2.2em;
+            color: var(--color-neon-red);
+            text-shadow: 0 0 8px var(--color-neon-glow);
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 14px; 
+        }
+
+        .nav-button {
+            background-color: var(--color-surface-bg);
+            border: 2px solid var(--color-neon-red);
+            color: var(--color-text-light);
+            padding: 12px 18px; 
+            font-size: 1.1em; 
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+            text-shadow: var(--color-text-shadow);
+        }
+
+        .nav-button:hover {
+            background-color: var(--color-neon-red);
+            color: var(--color-black);
+            box-shadow: 0 0 15px var(--color-neon-red);
+            transform: scale(1.05);
+        }
+
+        .nav-button.active {
+            background-color: var(--color-neon-red);
+            color: var(--color-black);
+            font-weight: bold;
+            box-shadow: 0 0 20px var(--color-neon-red);
+            text-shadow: none;
+            border-color: var(--color-text-light);
+        }
+        
+        /* NEW: Mode Toggle Button */
+        .mode-toggle-button {
+            background: none;
+            border: none;
+            color: var(--color-text-light);
+            font-size: 1.4em;
+            cursor: pointer;
+            padding: 10px;
+            margin-left: 10px;
+            transition: color 0.3s, transform 0.3s;
+            outline: none;
+        }
+
+        .mode-toggle-button .fa-sun {
+            color: #ffcc00; /* Yellow Sun for dark mode */
+            text-shadow: 0 0 10px #ffcc00;
+        }
+        
+        .light-mode .mode-toggle-button .fa-moon {
+            color: #4f4f4f; /* Dark Moon for light mode */
+            text-shadow: none;
+        }
+
+        /* Main Content Area */
+        .content-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .content-section {
+            background-color: var(--color-surface-bg);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--color-shadow);
+            margin-top: 20px;
+            display: none; 
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--color-neon-red);
+            border-bottom: 2px dashed var(--color-neon-red);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.8em; 
+            text-shadow: 0 0 5px var(--color-neon-glow);
+        }
+        
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 2px solid var(--color-neon-red);
+            border-radius: 8px;
+            background-color: var(--color-main-bg);
+            box-shadow: 0 0 15px var(--color-neon-glow); /* Always keep glow on search bar */
+        }
+
+        .search-bar input, .search-bar select { /* Added select */
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 2px solid var(--color-neon-red);
+            border-radius: 6px;
+            background-color: var(--color-card-bg);
+            color: var(--color-text-light);
+            font-size: 1em; 
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-bar button {
+            background-color: var(--color-neon-red);
+            color: var(--color-black);
+            font-weight: bold;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .placeholder-box {
+             padding: 25px; 
+             background-color: var(--color-card-bg); 
+             border: 1px solid var(--color-border); 
+             border-radius: 6px;
+             color: var(--color-text-light);
+             font-size: 1.1em;
+        }
+        
+        .placeholder-box h3 {
+            color: var(--color-neon-red);
+            font-size: 1.5em;
+            text-shadow: 0 0 3px var(--color-neon-glow);
+        }
+        
+        .detail-btn {
+            background-color: var(--color-neon-red);
+            color: var(--color-black);
+            padding: 10px 18px; 
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em; 
+            transition: background-color 0.3s;
+        }
+
+        /* Anime Info Section Specific Styles */
+        .anime-list {
+            display: grid;
+            /* MODIFIED to force 3 columns */
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 15px; /* MODIFIED: Reduced gap slightly */
+            margin-top: 30px;
+        }
+
+        .anime-card {
+            background-color: var(--color-card-bg);
+            border: 1px solid var(--color-neon-red);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 8px rgba(255, 51, 102, 0.3);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+
+        .anime-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 15px var(--color-neon-red);
+        }
+
+        .anime-card img {
+            width: 100%;
+            height: 160px; /* Kept small for a smaller box */
+            object-fit: cover; 
+            display: block;
+            border-bottom: 1px solid var(--color-neon-red);
+        }
+        
+        /* ... (rest of CSS remains mostly the same, relying on new variables) ... */
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        
+<img src="https://i.ibb.co/wJ8gX3c/neon-anime-logo.png" alt="Anime Hub Logo" class="site-logo">
+        <h1>✨ Anime Hub // NEON</h1>
+        <nav class="main-nav">
+            <button class="nav-button active" data-target="anime-info-section"><i class="fas fa-book"></i> Anime Info</button>
+            <button class="nav-button" data-target="quiz-section"><i class="fas fa-gamepad"></i> Quiz</button>
+            <button class="nav-button" data-target="contests-section"><i class="fas fa-trophy"></i> Contests</button>
+            <button class="nav-button" data-target="polls-section"><i class="fas fa-poll"></i> Polls</button>
+            <button class="nav-button" data-target="editz-section"><i class="fas fa-palette"></i> Editz</button>
+            
+            <button id="mode-toggle" class="mode-toggle-button" aria-label="Toggle Light/Dark Mode">
+                <i class="fas fa-sun"></i> 
+            </button>
+        </nav>
+    </header>
+
+    <main class="content-container">
+        
+        <section id="anime-info-section" class="content-section active">
+            <h2>📚 Top 20 Anime Info List</h2>
+            
+            <div class="search-bar">
+                <input type="text" id="animeSearchInput" placeholder="Search for an anime, e.g., Naruto, Bleach...">
+                <select id="genreFilter" style="padding: 12px 15px; border: 2px solid var(--color-neon-red); border-radius: 6px; background-color: var(--color-card-bg); color: var(--color-text-light); font-size: 1em; outline: none; transition: all 0.3s;">
+                    <option value="all">Filter by Genre (All)</option>
+                    <option value="Action">Action</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Comedy">Comedy</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Supernatural">Supernatural</option>
+                    <option value="Shonen">Shonen</option>
+                    <option value="Mystery">Mystery</option>
+                    <option value="Sci-Fi">Sci-Fi</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Military">Military</option>
+                    <option value="Historical">Historical</option>
+                    <option value="Horror">Horror</option>
+                    <option value="Superhero">Superhero</option>
+                    <option value="Psychological">Psychological</option>
+                </select>
+            </div>
+            
+            <div class="anime-list">
+                <div class="anime-card" data-id="one-piece"><img src="https://3.bp.blogspot.com/-oIQES0vsNPE/T3f_6AemB6I/AAAAAAAAAUU/sWrr1ewwSGs/s1600/one-piece--small--wp1.jpg" alt="One Piece Cover"><h3>One Piece</h3><p>Adventure, Shonen | Eps: 1000+ | Rating: 4.9/5</p><button class="detail-btn">View Details</button></div>
+                <div class="anime-card" data-id="aot"><img src="https://i.blogs.es/7944c9/attack-on-titan-television-paga-mexico-bitme-televisa-febrero/1366_2000.jpeg" alt="Attack on Titan Cover"><h3>Attack on Titan</h3><p>Dark Fantasy, Military | Eps: 88 | Rating: 4.8/5</p><button class="detail-btn">View Details</button></div>
+                <div class="anime-card" data-id="jjk"><img src="https://tse2.mm.bing.net/th/id/OIP.VCMah68f-3Gabs0fA6ALFQHaE8?pid=Api&P=0&h=180" alt="Jujutsu Kaisen Cover"><h3>Jujutsu Kaisen</h3><p>Supernatural, School | Eps: 47+ | Rating: 4.7/5</p><button class="detail-btn">View Details</button></div>
+                <div class="anime-card" data-id="fma"><img src="https://media.senscritique.com/media/000006480359/source_big/Full_Metal_Alchemist_Brotherhood.jpg" alt="Fullmetal Alchemist Cover"><h3>FMA: Brotherhood</h3><p>Military, Fantasy | Eps: 64 | Rating: 5.0/5</p><button class="detail-btn">View Details</button></div>
+                
+                <div class="anime-card" data-id="naruto"><img src="https://static0.gamerantimages.com/wordpress/wp-content/uploads/2023/09/naruto.jpg" alt="Naruto Cover"><h3>Naruto Shippuden</h3><p>Ninja, Action | Eps: 500 | Rating: 4.7/5</p><button class="detail-btn">View Details</button></div>
+                <div class="anime-card" data-id="demon-slayer"><img src="https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p16749713_b_v8_ak.jpg" alt="Demon Slayer Cover"><h3>Demon Slayer</h3><p>Action, Historical | Eps: 55+ | Rating: 4.8/5</p><button class="detail-btn">View Details</button></div>
+                <div class="anime-card" data-id="csm"><img src="https://m.media-amazon.com/images/I/81s8xJUzWGL._SL1500_.jpg" alt="Chainsaw Man Cover"><h3>Chainsaw Man</h3><p>Action, Horror | Eps: 12 | Rating: 4.7/5</p><button class="detail-btn">View Details</button></div>
+                <div class="anime-card" data-id="mha"><img src="https://images.justwatch.com/poster/261483319/s718/my-hero-academia.jpg" alt="My Hero Academia Cover"><h3>My Hero Academia</h3><p>Superhero, School | Eps: 138+ | Rating: 4.6/5</p><button class="detail-btn">View Details</button></div>
+
+                <div class="anime-card" data-id="opm"><img src="https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781974742943/one-punch-man-vol-27-9781974742943_hr.jpg" alt="One Punch Man Cover"><h3>One Punch Man</h3><p>Action, Comedy, Superhero</p><button class="detail-btn">View Details</button></div>
+                <div class="anime-card" data-id="hunterx"><img src="https://images6.alphacoders.com/139/thumb-1920-1399815.jpg" alt="Hunter x Hunter Cover"><h3>Hunter x Hunter</h3><p>Adventure, Fantasy, Shonen</p><button class="detail-btn">View Details</button></div>
+                <div class="anime-card" data-id="rezero"><img src="https://static.zerochan.net/Re:Zero.Kara.Hajimeru.Isekai.Seikatsu.full.4129649.jpg" alt="Re:Zero Cover"><h3>Re:Zero</h3><p>Isekai, Psychological, Fantasy</p><button class="detail-btn">View Details</button></div>
+                <div class="anime-card" data-id="sao"><img src="https://multianime.com.mx/wp-content/uploads/2022/12/Sword-Art-Online-The-Movie-Progressive-estreno-febrero-2023.jpg" alt="Sword Art Online Cover"><h3>Sword Art Online</h3><p>Action, Sci-Fi, Gaming</p><button class="detail-btn">View Details</button></div>
+
+                <div class="anime-card" data-id="haikyuu"><img src="https://wallpapers.com/images/hd/haikyuu-teams-photo-collage-mm371yuaimn98slh.jpg" alt="Haikyuu!! Cover"><h3>Haikyuu!!</h3><p>Sports, School, Shonen</p><button class="detail-btn">View Details</button></div>
+                <div class="anime-card" data-id="spy-x-family"><img src="https://wallpaperaccess.com/full/9529529.jpg" alt="Spy X Family Cover"><h3>Spy X Family</h3><p>Comedy, Spy, Family</p><button class="detail-btn">View Details</button></div>
+                <div class="anime-card" data-id="bleach"><img src="https://static0.gamerantimages.com/wordpress/wp-content/uploads/sharedimages/2024/04/bleach-anime-poster.jpeg" alt="Bleach Cover"><h3>Bleach</h3><p>Supernatural, Shonen, Action</p><button class="detail-btn">View Details</button></div>
+                <div class="anime-card" data-id="death-note"><img src="http://images4.fanpop.com/image/photos/16400000/Death-Note-death-note-16486521-1024-768.jpg" alt="Death Note Cover"><h3>Death Note</h3><p>Mystery, Thriller | Eps: 37 | Rating: 4.9/5</p><button class="detail-btn">View Details</button></div>
+
+                <div class="anime-card" data-id="vinland"><img src="https://fr.web.img4.acsta.net/pictures/19/09/16/17/09/4903250.jpg" alt="Vinland Saga Cover"><h3>Vinland Saga</h3><p>Historical, Action, Adventure</p><button class="detail-btn">View Details</button></div>
+                <div class="anime-card" data-id="mob100"><img src="https://m.media-amazon.com/images/I/91nunbvU04L._SL1500_.jpg" alt="Mob Psycho 100 Cover"><h3>Mob Psycho 100</h3><p>Supernatural, Comedy, Slice of Life</p><button class="detail-btn">View Details</button></div>
+                <div class="anime-card" data-id="evangelion"><img src="https://www.hdwallpapers.in/download/red_hair_blue_eyes_neon_genesis_evangelion_hd_evangelion-HD.jpg" alt="Evangelion Cover"><h3>Evangelion</h3><p>Mecha, Psychological, Sci-Fi</p><button class="detail-btn">View Details</button></div>
+                <div class="anime-card" data-id="cowboy"><img src="https://images4.alphacoders.com/840/840709.jpg" alt="Cowboy Bebop Cover"><h3>Cowboy Bebop</h3><p>Sci-Fi, Space Western, Action</p><button class="detail-btn">View Details</button></div>
+
+            </div>
+        </section>
+
+        <section id="quiz-section" class="content-section">
+            <h2>🎮 Anime Knowledge Quiz</h2>
+            
+            <div id="quiz-start-screen" class="placeholder-box start-quiz-container">
+                <h3>Select Your Challenge</h3>
+                <p>Ready to test your knowledge?</p>
+                <button class="detail-btn level-btn" data-level="easy">EASY (15 Qs)</button>
+                <button class="detail-btn level-btn" style="background-color: #ffa500; margin-left: 10px;" data-level="medium">MEDIUM (30 Qs)</button>
+                <button class="detail-btn level-btn" style="background-color: #ff0000; margin-left: 10px;" data-level="hard">HARD (50 Qs)</button>
+                <br><br>
+                <button id="start-quiz-btn" class="detail-btn" style="padding: 15px 30px;">START QUIZ // GO</button>
+            </div>
+            
+            <div id="quiz-active-screen" class="placeholder-box quiz-container" style="display: none;">
+                <p style="color: var(--color-neon-red); font-weight: bold; margin-bottom: 5px;">Question <span id="question-number">1</span> / <span id="total-questions">50</span></p>
+                <div id="quiz-question">...</div>
+                <div id="quiz-options" class="quiz-options"></div>
+                <div id="quiz-feedback" style="display: none;"></div>
+                
+                <div class="quiz-controls">
+                    <button id="exit-quiz-btn" class="exit-btn"><i class="fas fa-times"></i> EXIT QUIZ</button>
+                    <button id="next-question-btn" class="next-btn">NEXT QUESTION »</button>
+                </div>
+            </div>
+
+            <div id="quiz-results-screen" class="placeholder-box start-quiz-container" style="display: none;">
+                <h3>QUIZ COMPLETE!</h3>
+                <p>You scored <span id="final-score">X</span> out of <span id="final-total">Y</span>.</p>
+                <p id="score-message"></p>
+                <button id="restart-quiz-btn" class="detail-btn" style="padding: 15px 30px; margin-top: 20px;">RESTART QUIZ</button>
+            </div>
+        </section>
+
+        <section id="contests-section" class="content-section">
+            <h2>🏆 Contest Home Screen</h2>
+            <div class="placeholder-box">
+                <p>Current Contest: **Best Anime Drawing 2025** - Submissions Open!</p>
+                <button class="detail-btn">Submit Your Entry</button>
+                <button class="detail-btn" style="background-color: #3f51b5; margin-left: 10px;">View Gallery</button>
+            </div>
+        </section>
+        
+        <section id="polls-section" class="content-section">
+            <h2>🗳 Live Poll: Best Anime Power System?</h2>
+            <div class="placeholder-box">
+                <p style="font-size: 1.2em; font-weight: bold; color: var(--color-neon-red);">Cast your vote below! Results update instantly.</p>
+                <div class="poll-options">
+                    
+                    <label>
+                        <input type="radio" name="power_vote" value="Nen"> 
+                        <span>Nen (Hunter x Hunter)</span>
+                    </label>
+                    
+                    <label>
+                        <input type="radio" name="power_vote" value="Quirks"> 
+                        <span>Quirks (My Hero Academia)</span>
+                    </label>
+                    
+                    <label>
+                        <input type="radio" name="power_vote" value="Alchemy"> 
+                        <span>Alchemy (FMA: Brotherhood)</span>
+                    </label>
+                    
+                    <button id="vote-btn" class="detail-btn" style="margin-top: 20px; padding: 12px 30px;">
+                        <i class="fas fa-poll"></i> SUBMIT VOTE
+                    </button>
+                    <p id="vote-message" style="color: var(--color-correct); margin-top: 10px; display: none;"></p>
+                    
+                </div>
+                
+                <div class="poll-results" id="poll-results-display">
+                    <p style="font-weight: bold; margin-bottom: 15px; color: var(--color-poll-1);">Current Total Votes: <span id="total-votes">0</span></p>
+                    
+                    <div class="poll-result-item">
+                        <span class="option-name" style="color: var(--color-poll-1);">Nen:</span> <span class="vote-count" data-count-for="Nen">0</span>
+                        <div class="poll-bar-container">
+                            <div class="poll-bar" data-bar-for="Nen" style="background-color: var(--color-poll-1); box-shadow: 0 0 10px var(--color-poll-1);"></div>
+                            <span class="poll-bar-label" data-percent-for="Nen">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="poll-result-item">
+                        <span class="option-name" style="color: var(--color-poll-2);">Quirks:</span> <span class="vote-count" data-count-for="Quirks">0</span>
+                        <div class="poll-bar-container">
+                            <div class="poll-bar" data-bar-for="Quirks" style="background-color: var(--color-poll-2); box-shadow: 0 0 10px var(--color-poll-2);"></div>
+                            <span class="poll-bar-label" data-percent-for="Quirks">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="poll-result-item">
+                        <span class="option-name" style="color: var(--color-poll-3);">Alchemy:</span> <span class="vote-count" data-count-for="Alchemy">0</span>
+                        <div class="poll-bar-container">
+                            <div class="poll-bar" data-bar-for="Alchemy" style="background-color: var(--color-poll-3); box-shadow: 0 0 10px var(--color-poll-3);"></div>
+                            <span class="poll-bar-label" data-percent-for="Alchemy">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="editz-section" class="content-section">
+            <div class="editz-header">
+                <h2>🎨 Community Editz Feed</h2>
+                <button class="detail-btn" style="background-color: var(--color-editz-accent); color: var(--color-black);"><i class="fas fa-upload"></i> Upload Edit</button>
+            </div>
+            
+            <p style="font-size: 1.1em; color: var(--color-editz-accent);">Showcasing the best fan-created wallpapers, GIFs, and art!</p>
+
+            <div class="editz-grid">
+                
+                <div class="edit-card" data-edit-id="edit1">
+                    <img src="https://wallpapercave.com/wp/wp7919808.jpg" alt="Jujutsu Kaisen Edit">
+                    <div class="edit-info">
+                        <p>By <strong>@Sorcerer_Max</strong></p>
+                        <button class="like-button"><i class="fas fa-heart"></i> <span class="like-count" data-likes="edit1">25</span></button>
+                    </div>
+                </div>
+                
+                <div class="edit-card" data-edit-id="edit2">
+                    <img src="https://images3.alphacoders.com/132/1322046.png" alt="Attack on Titan Edit">
+                    <div class="edit-info">
+                        <p>By <strong>@Titan_Lover</strong></p>
+                        <button class="like-button"><i class="fas fa-heart"></i> <span class="like-count" data-likes="edit2">45</span></button>
+                    </div>
+                </div>
+                
+                <div class="edit-card" data-edit-id="edit3">
+                    <img src="https://images.hdqwalls.com/download/tanjiro-kamado-anime-4k-7l-1920x1080.jpg" alt="Demon Slayer Edit">
+                    <div class="edit-info">
+                        <p>By <strong>@Breathing_Art</strong></p>
+                        <button class="like-button"><i class="fas fa-heart"></i> <span class="like-count" data-likes="edit3">18</span></button>
+                    </div>
+                </div>
+                
+                <div class="edit-card" data-edit-id="edit4">
+                    <img src="https://wallpaperaccess.com/full/1594968.jpg" alt="One Piece Edit">
+                    <div class="edit-info">
+                        <p>By <strong>@Pirate_King</strong></p>
+                        <button class="like-button"><i class="fas fa-heart"></i> <span class="like-count" data-likes="edit4">60</span></button>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+
+    </main>
+    
+    <div id="animeDetailModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-btn">×</span>
+            <h3 id="modalTitle">Anime Title</h3>
+            
+            <div class="modal-body-grid">
+                <div class="modal-image-container">
+                    <img id="modalImage" src="" alt="Anime Cover Art">
+                </div>
+                <div class="modal-info-text">
+                    <h4>Quick Summary</h4>
+                    <p id="modalDescription">Detailed description goes here...</p>
+                    
+                    <div class="modal-info-grid">
+                        <div><strong><i class="fas fa-film"></i> Genre:</strong> <span id="modalGenre"></span></div>
+                        <div><strong><i class="fas fa-tv"></i> Episodes:</strong> <span id="modalEpisodes"></span></div>
+                        <div><strong><i class="fas fa-industry"></i> Studio:</strong> <span id="modalStudio"></span></div>
+                        <div><strong><i class="fas fa-star"></i> Rating:</strong> <span id="modalRating"></span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="detail-btn" style="margin-top: 30px; background-color: var(--color-editz-accent); color: var(--color-black);">
+                <i class="fas fa-link"></i> WATCH TRAILER
+            </button>
+        </div>
+    </div>
+    <script>
+        // ------------------ ANIME DATA SOURCE (Updated with NEW, RELIABLE links) ------------------
+        const animeDetails = {
+            'one-piece': { 
+                title: 'One Piece', 
+                genre: 'Adventure, Shonen, Fantasy', 
+                episodes: '1000+', 
+                studio: 'Toei Animation', 
+                rating: '4.9/5', 
+                description: "The story follows the adventures of Monkey D. Luffy and his crew, the Straw Hat Pirates, as he explores the Grand Line in search of the world's ultimate treasure known as 'One Piece' to become the next Pirate King. Known for its world-building and character depth.", 
+                image: "https://3.bp.blogspot.com/-oIQES0vsNPE/T3f_6AemB6I/AAAAAAAAAUU/sWrr1ewwSGs/s1600/one-piece--small--wp1.jpg" 
+            },
+            'aot': { 
+                title: 'Attack on Titan', 
+                genre: 'Dark Fantasy, Action, Military', 
+                episodes: '88 (4 Seasons)', 
+                studio: 'MAPPA / Wit Studio', 
+                rating: '4.8/5', 
+                description: "After humanity is forced to live within giant walls to protect themselves from gigantic humanoid creatures called Titans, Eren Jaeger vows to exterminate them after a Titan breaks through the wall and causes a personal tragedy. A story packed with intense action, political intrigue, and massive plot twists.", 
+                image: "https://i.blogs.es/7944c9/attack-on-titan-television-paga-mexico-bitme-televisa-febrero/1366_2000.jpeg" 
+            },
+            'jjk': { 
+                title: 'Jujutsu Kaisen', 
+                genre: 'Supernatural, School, Action', 
+                episodes: '47+ (2 Seasons)', 
+                studio: 'MAPPA', 
+                rating: '4.7/5', 
+                description: "High school student Yuji Itadori joins a secret organization of Jujutsu Sorcerers after becoming host to a powerful Curse, Ryomen Sukuna. He must hunt down all of Sukuna's missing fingers to exorcise the Curse for good, balancing ordinary school life with dangerous supernatural missions.", 
+                image: "https://tse2.mm.bing.net/th/id/OIP.VCMah68f-3Gabs0fA6ALFQHaE8?pid=Api&P=0&h=180" 
+            },
+            'fma': { 
+                title: 'Fullmetal Alchemist: Brotherhood', 
+                genre: 'Military, Fantasy, Steampunk', 
+                episodes: '64', 
+                studio: 'Bones', 
+                rating: '5.0/5', 
+                description: "The young alchemist brothers Edward and Alphonse Elric search for the Philosopher's Stone to restore their bodies after a failed attempt to bring their mother back to life using forbidden alchemy. The series explores themes of sacrifice, morality, and government conspiracy.", 
+                image: "https://media.senscritique.com/media/000006480359/source_big/Full_Metal_Alchemist_Brotherhood.jpg" 
+            },
+            'naruto': { 
+                title: 'Naruto Shippuden', 
+                genre: 'Ninja, Action, Adventure', 
+                episodes: '500', 
+                studio: 'Studio Pierrot', 
+                rating: '4.7/5', 
+                description: "Following a two-and-a-half-year time skip, Naruto returns to the Hidden Leaf Village older and stronger, ready to face the world's greatest threats, primarily the criminal organization Akatsuki, and fulfill his dream of becoming Hokage.", 
+                image: "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2023/09/naruto.jpg" 
+            },
+            'demon-slayer': { 
+                title: 'Demon Slayer: Kimetsu no Yaiba', 
+                genre: 'Action, Historical, Dark Fantasy', 
+                episodes: '55+ (4 Seasons)', 
+                studio: 'Ufotable', 
+                rating: '4.8/5', 
+                description: "After his family is slaughtered by a demon and his younger sister, Nezuko, is turned into one, Tanjiro Kamado becomes a Demon Slayer, determined to turn his sister human again and hunt down the demon responsible for his family's fate.", 
+                image: "https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p16749713_b_v8_ak.jpg" 
+            },
+            'csm': { 
+                title: 'Chainsaw Man', 
+                genre: 'Action, Horror, Dark Comedy', 
+                episodes: '12', 
+                studio: 'MAPPA', 
+                rating: '4.7/5', 
+                description: "Denji, a poor young man, becomes a 'Chainsaw Man' devil hybrid after merging with his pet devil, Pochita. He joins the Public Safety Devil Hunters, living a dangerous life fighting devils to achieve simple human desires like eating good food and finding love.", 
+                image: "https://m.media-amazon.com/images/I/81s8xJUzWGL._SL1500_.jpg" 
+            },
+            'mha': { 
+                title: 'My Hero Academia', 
+                genre: 'Superhero, School, Shonen', 
+                episodes: '138+ (6 Seasons)', 
+                studio: 'Bones', 
+                rating: '4.6/5', 
+                description: "In a world where almost everyone has a superpower ('Quirk'), Izuku Midoriya is born without one. Despite this, he dreams of becoming a hero, a dream that becomes reality when the world's greatest hero, All Might, chooses him as his successor.", 
+                image: "https://images.justwatch.com/poster/261483319/s718/my-hero-academia.jpg" 
+            },
+            
+            // New Additions
+            'opm': { 
+                title: 'One Punch Man', 
+                genre: 'Action, Comedy, Superhero', 
+                episodes: '24+ (2 Seasons)', 
+                studio: 'Madhouse / J.C.Staff', 
+                rating: '4.7/5', 
+                description: "Saitama, a hero who can defeat any opponent with a single punch, searches for a worthy opponent while dealing with the existential crisis of being too powerful.", 
+                image: "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781974742943/one-punch-man-vol-27-9781974742943_hr.jpg" 
+            },
+            'hunterx': { 
+                title: 'Hunter x Hunter', 
+                genre: 'Adventure, Fantasy, Shonen', 
+                episodes: '148', 
+                studio: 'Madhouse', 
+                rating: '4.9/5', 
+                description: "Gon Freecss leaves his home to become a Hunter, search for his father, and discover the dangerous world of Hunters, leading him through complex martial arts and political struggles.", 
+                image: "https://images6.alphacoders.com/139/thumb-1920-1399815.jpg" 
+            },
+            'rezero': { 
+                title: 'Re:Zero - Starting Life in Another World', 
+                genre: 'Isekai, Psychological, Fantasy', 
+                episodes: '50+ (2 Seasons)', 
+                studio: 'White Fox', 
+                rating: '4.6/5', 
+                description: "A high school student named Subaru is summoned to another world, gaining only the ability to 'Return by Death'—which allows him to rewind time after he dies. He must use this painful power to save those he cares about.", 
+                image: "https://static.zerochan.net/Re:Zero.Kara.Hajimeru.Isekai.Seikatsu.full.4129649.jpg" 
+            },
+            'sao': { 
+                title: 'Sword Art Online', 
+                genre: 'Action, Sci-Fi, Gaming', 
+                episodes: '96+ (Multiple Seasons)', 
+                studio: 'A-1 Pictures', 
+                rating: '4.3/5', 
+                description: "Players are trapped inside a Virtual Reality Massive Multiplayer Online Role-Playing Game (VRMMORPG). The only way to escape is to clear the game, but if they die in the game, they die in real life.", 
+                image: "https://multianime.com.mx/wp-content/uploads/2022/12/Sword-Art-Online-The-Movie-Progressive-estreno-febrero-2023.jpg" 
+            },
+            'haikyuu': { 
+                title: 'Haikyuu!!', 
+                genre: 'Sports, School, Shonen', 
+                episodes: '85+ (4 Seasons)', 
+                studio: 'Production I.G', 
+                rating: '4.8/5', 
+                description: "Shoyo Hinata, a short but determined boy, joins his high school volleyball club to become a great player despite his height. The series chronicles the fierce rivalries, intense training, and emotional growth of the Karasuno team.", 
+                image: "https://wallpapers.com/images/hd/haikyuu-teams-photo-collage-mm371yuaimn98slh.jpg" 
+            },
+            'spy-x-family': { 
+                title: 'Spy X Family', 
+                genre: 'Comedy, Spy, Family', 
+                episodes: '37+ (2 Seasons)', 
+                studio: 'Wit Studio / CloverWorks', 
+                rating: '4.6/5', 
+                description: "Master spy 'Twilight' must build a fake family to execute a top-secret mission. He adopts a telepathic girl and marries an assassin, all while keeping their true identities secret from each other. A delightful blend of comedy and espionage.", 
+                image: "https://wallpaperaccess.com/full/9529529.jpg" 
+            },
+            'bleach': { 
+                title: 'Bleach', 
+                genre: 'Supernatural, Shonen, Action', 
+                episodes: '366+', 
+                studio: 'Studio Pierrot', 
+                rating: '4.5/5', 
+                description: "Ichigo Kurosaki gains the powers of a Soul Reaper—a death personification similar to the Grim Reaper—and takes on the duty of shepherding souls to the afterlife and protecting humans from evil spirits known as Hollows.", 
+                image: "https://static0.gamerantimages.com/wordpress/wp-content/uploads/sharedimages/2024/04/bleach-anime-poster.jpeg" 
+            },
+            'death-note': { 
+                title: 'Death Note', 
+                genre: 'Mystery, Psychological Thriller', 
+                episodes: '37', 
+                studio: 'Madhouse', 
+                rating: '4.9/5', 
+                description: "A high school genius finds a supernatural notebook that allows him to kill anyone whose name he writes in it. He begins a secret crusade to rid the world of criminals, attracting the attention of the police and an enigmatic master detective known only as L.", 
+                image: "http://images4.fanpop.com/image/photos/16400000/Death-Note-death-note-16486521-1024-768.jpg" 
+            },
+            'vinland': { 
+                title: 'Vinland Saga', 
+                genre: 'Historical, Action, Adventure', 
+                episodes: '48+ (2 Seasons)', 
+                studio: 'Wit Studio / MAPPA', 
+                rating: '4.8/5', 
+                description: "Set in 11th-century Europe, the story follows Thorfinn, a young man who seeks revenge against the man who murdered his father, leading him through epic battles and a complex path of self-discovery.", 
+                image: "https://fr.web.img4.acsta.net/pictures/19/09/16/17/09/4903250.jpg" 
+            },
+            'mob100': { 
+                title: 'Mob Psycho 100', 
+                genre: 'Supernatural, Comedy, Slice of Life', 
+                episodes: '37+ (3 Seasons)', 
+                studio: 'Bones', 
+                rating: '4.7/5', 
+                description: "Shigeo 'Mob' Kageyama is a powerful esper whose emotional level is linked to his psychic abilities. He tries to live a normal life while learning to control his powers under the guidance of a self-proclaimed psychic mentor.", 
+                image: "https://m.media-amazon.com/images/I/91nunbvU04L._SL1500_.jpg" 
+            },
+            'evangelion': { 
+                title: 'Neon Genesis Evangelion', 
+                genre: 'Mecha, Psychological, Sci-Fi', 
+                episodes: '26', 
+                studio: 'Gainax / Tatsunoko', 
+                rating: '4.4/5', 
+                description: "In a post-apocalyptic world, teenagers are recruited to pilot giant bio-machines called Evangelions to fight monstrous beings known as Angels. The series is famous for its complex psychological themes and controversial ending.", 
+                image: "https://www.hdwallpapers.in/download/red_hair_blue_eyes_neon_genesis_evangelion_hd_evangelion-HD.jpg" 
+            },
+            'cowboy': { 
+                title: 'Cowboy Bebop', 
+                genre: 'Sci-Fi, Space Western, Action', 
+                episodes: '26', 
+                studio: 'Sunrise', 
+                rating: '4.7/5', 
+                description: "A crew of bounty hunters travel aboard the spaceship Bebop in the year 2071, hunting down criminals across the solar system. The series is highly regarded for its jazz soundtrack and mature themes.", 
+                image: "https://images4.alphacoders.com/840/840709.jpg" 
+            }
+        };
+
+        // ------------------ QUIZ DATA SOURCE (Updated for Dynamic Question Generation) ------------------
+        const shuffleArray = array => {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        };
+        const targetEasy = 15;
+        const targetMedium = 30;
+        const targetHard = 50; 
+        
+        const Qs = [ 
+            { question: "What is One Piece?", options: ["The Pirate Throne", "The Grand Treasure", "The One Piece", "The Gold"], answer: "The One Piece", level: "easy" },
+            { question: "Who is L?", options: ["Mello", "Near", "L", "Light Yagami"], answer: "L", level: "easy" },
+            { question: "Sport in Haikyuu?", options: ["Basketball", "Soccer", "Volleyball", "Baseball"], answer: "Volleyball", level: "easy" },
+            { question: "What is the equivalent exchange?", options: ["You can't get something for nothing.", "To obtain, something of equal value must be lost.", "The power of the stone is boundless.", "Matter cannot be created or destroyed."], answer: "To obtain, something of equal value must be lost.", level: "medium" },
+            { question: "What are Titans?", options: ["Monsters", "Goliaths", "Titans", "Kaiju"], answer: "Titans", level: "medium" },
+            { question: "Gojo's rank?", options: ["Special Grade", "Grade 1", "Grade 2", "Jujutsu High Teacher"], answer: "Special Grade", level: "hard" },
+            { question: "Stone made from?", options: ["Gold and Silver", "Human Souls", "Rare Minerals", "Condensed Alchemy"], answer: "Human Souls", level: "hard" },
+            { question: "What is Tanjiro's primary style of breathing?", options: ["Thunder Breathing", "Water Breathing", "Flame Breathing", "Moon Breathing"], answer: "Water Breathing", level: "easy" },
+            { question: "In My Hero Academia, what is All Might's Quirk?", options: ["Super Strength", "One For All", "Smash", "All For One"], answer: "One For All", level: "medium" },
+            { question: "What is the name of Spike Spiegel's ship in Cowboy Bebop?", options: ["Swordfish II", "Millennium Falcon", "Bebop", "Red Tail"], answer: "Bebop", level: "hard" }
+        ];
+
+        const easyQuestions = Qs.filter(q => q.level === 'easy');
+        const mediumQuestions = Qs.filter(q => q.level === 'medium');
+        const hardQuestions = Qs.filter(q => q.level === 'hard');
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let quizLevel = 'easy';
+
+
+        // ------------------ POLL DATA SOURCE (Retained for functionality) ------------------
+        let pollVotes = { 'Nen': 0, 'Quirks': 0, 'Alchemy': 0 };
+        const POLL_STORAGE_KEY = 'animeHubPollVotes';
+        const VOTE_STATUS_KEY = 'animeHubVoted';
+        
+        // ------------------ NEW: LIGHT/DARK MODE LOGIC ------------------
+        const body = document.body;
+        const modeToggleButton = document.getElementById('mode-toggle');
+        const MODE_STORAGE_KEY = 'animeHubMode';
+
+        // Function to set the mode based on the current body class
+        function setMode(isLight) {
+            if (isLight) {
+                body.classList.add('light-mode');
+                modeToggleButton.innerHTML = '<i class="fas fa-moon"></i>'; // Icon for switching back to dark
+                localStorage.setItem(MODE_STORAGE_KEY, 'light');
+            } else {
+                body.classList.remove('light-mode');
+                modeToggleButton.innerHTML = '<i class="fas fa-sun"></i>'; // Icon for switching back to light
+                localStorage.setItem(MODE_STORAGE_KEY, 'dark');
+            }
+        }
+
+        // Load preference on initial load
+        const savedMode = localStorage.getItem(MODE_STORAGE_KEY);
+        if (savedMode === 'light') {
+            setMode(true);
+        } else {
+            // Default or saved 'dark' mode
+            setMode(false);
+        }
+
+        // Attach event listener
+        if (modeToggleButton) {
+            modeToggleButton.addEventListener('click', () => setMode(!body.classList.contains('light-mode')));
+        }
+        // ------------------ END MODE LOGIC ------------------
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const navButtons = document.querySelectorAll('.nav-button');
+            const contentSections = document.querySelectorAll('.content-section');
+            const modal = document.getElementById('animeDetailModal');
+            const closeModal = document.querySelector('.close-btn');
+
+            // --- Navigation Handler ---
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.getAttribute('data-target');
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    contentSections.forEach(section => section.classList.remove('active'));
+                    button.classList.add('active');
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                    }
+                    
+                    if (targetId === 'polls-section') {
+                        loadVotes();
+                        renderPollResults();
+                    }
+                    if (targetId === 'editz-section') {
+                        loadLikes();
+                    }
+                });
+            });
+
+            // --- Detail Modal Handlers ---
+            document.querySelectorAll('.anime-card .detail-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const card = button.closest('.anime-card');
+                    const animeId = card.getAttribute('data-id');
+                    const data = animeDetails[animeId];
+
+                    if (data) {
+                        document.getElementById('modalTitle').textContent = data.title;
+                        document.getElementById('modalImage').src = data.image; 
+                        document.getElementById('modalDescription').textContent = data.description;
+                        document.getElementById('modalGenre').textContent = data.genre;
+                        document.getElementById('modalEpisodes').textContent = data.episodes;
+                        document.getElementById('modalStudio').textContent = data.studio;
+                        document.getElementById('modalRating').textContent = data.rating;
+                        modal.style.display = 'block';
+                    }
+                });
+            });
+
+            closeModal.onclick = function() { modal.style.display = 'none'; }
+            window.onclick = function(event) { if (event.target == modal) { modal.style.display = 'none'; } }
+            
+            // --- NEW: DYNAMIC SEARCH AND FILTER LOGIC ---
+            const animeSearchInput = document.getElementById('animeSearchInput');
+            const genreFilter = document.getElementById('genreFilter');
+            const animeList = document.querySelector('.anime-list');
+
+            function filterAnimeCards() {
+                const searchTerm = animeSearchInput.value.toLowerCase();
+                const selectedGenre = genreFilter.value.toLowerCase();
+
+                const cards = animeList.querySelectorAll('.anime-card');
+
+                cards.forEach(card => {
+                    const animeId = card.getAttribute('data-id');
+                    const data = animeDetails[animeId];
+
+                    const titleMatch = data.title.toLowerCase().includes(searchTerm);
+
+                    const genreMatch = selectedGenre === 'all' || data.genre.toLowerCase().includes(selectedGenre);
+
+                    if (titleMatch && genreMatch) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            if (animeSearchInput && genreFilter) { 
+                animeSearchInput.addEventListener('input', filterAnimeCards);
+                genreFilter.addEventListener('change', filterAnimeCards);
+            }
+            // --- END SEARCH/FILTER LOGIC ---
+
+            // --- QUIZ LOGIC FUNCTIONS (Updated for Dynamic Question Generation) ---
+            const startScreen = document.getElementById('quiz-start-screen');
+            const activeScreen = document.getElementById('quiz-active-screen');
+            const resultsScreen = document.getElementById('quiz-results-screen');
+            const questionEl = document.getElementById('quiz-question');
+            const optionsEl = document.getElementById('quiz-options');
+            const feedbackEl = document.getElementById('quiz-feedback');
+            const nextButton = document.getElementById('next-question-btn');
+
+            function startQuiz() {
+                let questionsPool = [];
+                let totalTarget = 0;
+
+                if (quizLevel === 'easy') {
+                    totalTarget = targetEasy; // 15
+                    for (let i = 0; i < totalTarget; i++) {
+                        questionsPool.push({...easyQuestions[i % easyQuestions.length]});
+                    }
+                } else if (quizLevel === 'medium') {
+                    totalTarget = targetMedium; // 30
+                    questionsPool.push(...easyQuestions); 
+                    let neededMedium = totalTarget - easyQuestions.length; 
+                    for (let i = 0; i < neededMedium; i++) {
+                        questionsPool.push({...mediumQuestions[i % mediumQuestions.length]}); 
+                    }
+                } else { // Hard (50 Qs)
+                    totalTarget = targetHard; // 50
+                    questionsPool.push(...easyQuestions); 
+                    questionsPool.push(...mediumQuestions); 
+                    let neededHard = totalTarget - easyQuestions.length - mediumQuestions.length;
+                    for (let i = 0; i < neededHard; i++) {
+                        questionsPool.push({...hardQuestions[i % hardQuestions.length]}); 
+                    }
+                }
+                
+                // Randomize the entire selection for this specific run
+                currentQuestions = shuffleArray(questionsPool);
+                
+                currentQuestionIndex = 0;
+                score = 0;
+                startScreen.style.display = 'none';
+                resultsScreen.style.display = 'none';
+                activeScreen.style.display = 'flex';
+                nextButton.style.display = 'none';
+                document.getElementById('total-questions').textContent = currentQuestions.length;
+                showQuestion();
+            }
+
+            function showQuestion() {
+                if (currentQuestionIndex >= currentQuestions.length) { endQuiz(); return; }
+
+                const q = currentQuestions[currentQuestionIndex];
+                document.getElementById('question-number').textContent = currentQuestionIndex + 1;
+                questionEl.textContent = q.question;
+                optionsEl.innerHTML = '';
+                feedbackEl.style.display = 'none';
+                nextButton.style.display = 'none';
+                
+                const shuffledOptions = shuffleArray([...q.options]);
+
+                shuffledOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.classList.add('option-btn');
+                    button.textContent = option;
+                    button.addEventListener('click', () => checkAnswer(button, option, q.answer));
+                    optionsEl.appendChild(button);
+                });
+            }
+
+            function checkAnswer(selectedButton, selectedAnswer, correctAnswer) {
+                const isCorrect = selectedAnswer === correctAnswer;
+                
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.classList.add('disabled');
+                    btn.style.pointerEvents = 'none';
+                });
+
+                if (isCorrect) {
+                    selectedButton.classList.add('correct');
+                    feedbackEl.textContent = '✅ Correct! Nice knowledge.';
+                    score++;
+                } else {
+                    selectedButton.classList.add('incorrect');
+                    document.querySelectorAll('.option-btn').forEach(btn => {
+                        if (btn.textContent === correctAnswer) { btn.classList.add('correct'); }
+                    });
+                    feedbackEl.textContent = `❌ Incorrect. The correct answer was "${correctAnswer}".`;
+                }
+
+                feedbackEl.style.display = 'block';
+                nextButton.style.display = 'block';
+            }
+
+            function endQuiz() {
+                activeScreen.style.display = 'none';
+                resultsScreen.style.display = 'flex';
+                document.getElementById('final-score').textContent = score;
+                document.getElementById('final-total').textContent = currentQuestions.length;
+                
+                let message = '';
+                const percentage = (score / currentQuestions.length) * 100;
+                if (percentage === 100) { message = '🔥 Perfect Score! You are an Anime Master!'; } 
+                else if (percentage >= 80) { message = '✨ Excellent Job! You definitely know your stuff.'; } 
+                else if (percentage >= 60) { message = '👍 Great Effort! You got the basics down.'; } 
+                else { message = '😅 Better luck next time. Time to rewatch some classics!'; }
+                document.getElementById('score-message').textContent = message;
+            }
+
+            function exitQuiz() {
+                activeScreen.style.display = 'none';
+                startScreen.style.display = 'flex';
+                currentQuestionIndex = 0;
+                score = 0;
+            }
+
+            document.querySelectorAll('.level-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    quizLevel = btn.getAttribute('data-level');
+                });
+            });
+
+            document.getElementById('start-quiz-btn').addEventListener('click', startQuiz);
+            document.getElementById('next-question-btn').addEventListener('click', () => { currentQuestionIndex++; showQuestion(); });
+            document.getElementById('restart-quiz-btn').addEventListener('click', exitQuiz); 
+            document.getElementById('exit-quiz-btn').addEventListener('click', exitQuiz); 
+            document.querySelector('.level-btn[data-level="easy"]').classList.add('active');
+
+
+            // --- LIVE POLL LOGIC (Unchanged) ---
+            const voteButton = document.getElementById('vote-btn');
+            const radioButtons = document.querySelectorAll('input[name="power_vote"]');
+            const voteMessage = document.getElementById('vote-message');
+
+            function loadVotes() {
+                const storedVotes = localStorage.getItem(POLL_STORAGE_KEY);
+                if (storedVotes) { pollVotes = JSON.parse(storedVotes); }
+                const hasVoted = localStorage.getItem(VOTE_STATUS_KEY) === 'true';
+                if (hasVoted) { disableVoting(); } else { enableVoting(); }
+            }
+            
+            function saveVotes() { localStorage.setItem(POLL_STORAGE_KEY, JSON.stringify(pollVotes)); }
+
+            function renderPollResults() {
+                const totalVotes = Object.values(pollVotes).reduce((sum, count) => sum + count, 0);
+                document.getElementById('total-votes').textContent = totalVotes;
+                
+                for (const option in pollVotes) {
+                    const count = pollVotes[option];
+                    const percent = totalVotes === 0 ? 0 : Math.round((count / totalVotes) * 100);
+                    
+                    const countElement = document.querySelector(`[data-count-for="${option}"]`);
+                    const barElement = document.querySelector(`[data-bar-for="${option}"]`);
+                    const percentElement = document.querySelector(`[data-percent-for="${option}"]`);
+
+                    if (countElement) countElement.textContent = count;
+                    if (barElement) barElement.style.width = `${percent}%`;
+                    if (percentElement) percentElement.textContent = `${percent}%`;
+                }
+            }
+
+            function disableVoting() {
+                radioButtons.forEach(radio => radio.disabled = true);
+                voteButton.disabled = true;
+                voteButton.style.opacity = 0.5;
+                voteMessage.style.display = 'block';
+                voteMessage.textContent = '✅ Your vote has been recorded! Thank you.';
+            }
+
+            function enableVoting() {
+                radioButtons.forEach(radio => radio.disabled = false);
+                voteButton.disabled = false;
+                voteButton.style.opacity = 1;
+                voteMessage.style.display = 'none';
+                voteMessage.textContent = ''; 
+            }
+
+            voteButton.addEventListener('click', () => {
+                const selectedOption = document.querySelector('input[name="power_vote"]:checked');
+
+                if (selectedOption) {
+                    const optionValue = selectedOption.value;
+                    
+                    if (pollVotes.hasOwnProperty(optionValue) && localStorage.getItem(VOTE_STATUS_KEY) !== 'true') {
+                        pollVotes[optionValue]++;
+                        saveVotes();
+                        localStorage.setItem(VOTE_STATUS_KEY, 'true');
+                        renderPollResults();
+                        disableVoting();
+                    } else if (localStorage.getItem(VOTE_STATUS_KEY) === 'true') {
+                        disableVoting();
+                    }
+                } else if (localStorage.getItem(VOTE_STATUS_KEY) !== 'true') {
+                    alert('Please select an option before voting!');
+                }
+            });
+
+            // --- EDITZ LOGIC (Unchanged) ---
+            const LIKE_STORAGE_KEY = 'animeHubEditLikes';
+            let editLikes = {};
+
+            function loadLikes() {
+                const storedLikes = localStorage.getItem(LIKE_STORAGE_KEY);
+                if (storedLikes) {
+                    editLikes = JSON.parse(storedLikes);
+                } else {
+                    editLikes = { 'edit1': 25, 'edit2': 45, 'edit3': 18, 'edit4': 60 };
+                }
+
+                document.querySelectorAll('.edit-card').forEach(card => {
+                    const editId = card.getAttribute('data-edit-id');
+                    const likeCountEl = card.querySelector(`.like-count[data-likes="${editId}"]`);
+                    const likeButton = card.querySelector('.like-button');
+                    
+                    if (likeCountEl) {
+                        likeCountEl.textContent = editLikes[editId];
+                    }
+                    
+                    const likedStatus = localStorage.getItem(`liked-${editId}`) === 'true';
+                    if (likedStatus) {
+                        likeButton.classList.add('liked');
+                    } else {
+                        likeButton.classList.remove('liked');
+                    }
+                });
+            }
+
+            function saveLikes() {
+                localStorage.setItem(LIKE_STORAGE_KEY, JSON.stringify(editLikes));
+            }
+
+            document.querySelectorAll('.like-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const card = button.closest('.edit-card');
+                    const editId = card.getAttribute('data-edit-id');
+                    const likeCountEl = card.querySelector(`.like-count[data-likes="${editId}"]`);
+                    
+                    if (button.classList.contains('liked')) {
+                        return; 
+                    } else {
+                        editLikes[editId] = (editLikes[editId] || 0) + 1;
+                        button.classList.add('liked');
+                        localStorage.setItem(`liked-${editId}`, 'true'); 
+                    }
+                    
+                    likeCountEl.textContent = editLikes[editId];
+                    saveLikes();
+                });
+            });
+
+            // Initial calls
+            loadLikes();
+            loadVotes();
+            renderPollResults();
+            
+            // Activate the first section on load
+            document.getElementById('anime-info-section').classList.add('active');
+        });
+    </script>
+</body>
+</html>
